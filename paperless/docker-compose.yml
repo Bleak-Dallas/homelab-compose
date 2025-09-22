@@ -1,0 +1,83 @@
+# Docker Compose file for Paperless-ngx with PostgreSQL in a home lab.
+# Configured for a two-user setup with bind mounts to /mnt/papra.
+# Based on Paperless-ngx documentation: https://docs.paperless-ngx.com/setup/#installation
+#
+# To use:
+# 1. Save this file as 'docker-compose.yml' in your working directory.
+# 2. Create a 'docker-compose.env' file with additional settings (e.g., PAPERLESS_SECRET_KEY).
+# 3. Run 'docker compose pull' to fetch images.
+# 4. Run 'docker compose up -d' to start.
+# 5. Access Paperless-ngx at http://<LXC_HOST_IP>:8010 (login: admin, password set in docker-compose.env).
+#
+# Notes:
+# - Uses PostgreSQL for optimal performance with Paperless-ngx.
+# - Bind mounts to /mnt/papra/paperless for data persistence.
+# - Secure sensitive data with backups to NAS (e.g., /nas/paperless_backups).
+
+services:
+  broker:
+    image: docker.io/library/redis:8.0
+    restart: unless-stopped
+    volumes:
+      - /srv/paperless/redisdata:/data
+    networks:
+      - paperless-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  db:
+    image: docker.io/library/postgres:17.1
+    restart: unless-stopped
+    volumes:
+      - /srv/paperless/pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - paperless-net
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "paperless"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.9.0
+    restart: unless-stopped
+    depends_on:
+      broker:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    ports:
+      - "8010:8000"
+    volumes:
+      - /srv/paperless/data:/usr/src/paperless/data
+      - /srv/paperless/media:/usr/src/paperless/media
+      - /srv/paperless/consume:/usr/src/paperless/consume
+      - /srv/paperless/export:/usr/src/paperless/export
+    env_file: docker-compose.env
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBENGINE: postgresql
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBNAME: paperless
+      PAPERLESS_DBUSER: paperless
+      PAPERLESS_DBPASS: ${POSTGRES_PASSWORD}
+      PAPERLESS_ADMIN_USER: admin
+      PAPERLESS_ADMIN_PASSWORD: ${PAPERLESS_ADMIN_PASSWORD}
+      PAPERLESS_OCR_LANGUAGE: eng
+      PAPERLESS_TIME_ZONE: America/Denver
+      PAPERLESS_URL: ${PAPERLESS_URL}
+    networks:
+      - paperless-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+networks:
+  paperless-net:
+    driver: bridge
