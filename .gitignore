@@ -3,6 +3,14 @@
 **/.env
 **/*.env
 
+# Traefik
+traefik/data/*.yml
+traefik/data/*.yaml
+traefik/data/config.yml
+traefik/data/traefik.yml
+traefik/data/acme.json
+!traefik/data/*.example
+
 
 # Private keys and certs
 *.pem
