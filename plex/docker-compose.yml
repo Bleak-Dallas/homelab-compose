@@ -1,0 +1,36 @@
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    env_file: .env
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - VERSION=docker
+      # NVIDIA
+      - NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES}
+      - NVIDIA_DRIVER_CAPABILITIES=compute,video,utility
+      # Plex network hints (LAN)
+      - ADVERTISE_IP=${ADVERTISE_IP}
+      - ALLOWED_NETWORKS=${ALLOWED_NETWORKS}
+    volumes:
+      - /home/serveradmin/plex/config:/config
+      # choose one of these for /transcode:
+      - /mnt/plex/media/transcode:/transcode # (SSD path, what you have now)
+      # tmpfs RAM option (commented out unless you want it):
+      # tmpfs:
+      #   - /transcode:size=8g,noexec,nosuid,nodev
+      - /mnt/plex/media/movies:/movies
+      - /mnt/plex/media/tvshows:/tv
+      - /mnt/plex/media/music:/music
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    runtime: nvidia
+    healthcheck:
+      test: ["CMD-SHELL", "nvidia-smi >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
