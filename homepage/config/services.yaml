@@ -1,0 +1,134 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/services
+
+- Hypervisor:
+          - Proxmox-2:
+                    icon: proxmox.svg
+                    href: "{{HOMEPAGE_VAR_PROXMOX-2_URL}}"
+                    description: "{{HOMEPAGE_VAR_PIHOLE_URL_1_des}}"
+                   # widget:
+                   #         type: proxmox
+                   #         url: "{{HOMEPAGE_VAR_PROXMOX_URL}}"
+                   #         username: "{{HOMEPAGE_VAR_PROXMOX_USER}}"
+                   #         password: "{{HOMEPAGE_VAR_PROXMOX_API_KEY}}"
+                   #         node: pve-2
+          - Proxmox-3:
+                    icon: proxmox.svg
+                    href: "{{HOMEPAGE_VAR_PROXMOX-3_URL}}"
+                    description: "{{HOMEPAGE_VAR_PROXMOX-3_URL_des}}"
+                   # widget:
+                   #         type: proxmox
+                   #         url: "{{HOMEPAGE_VAR_PROXMOX_URL}}"
+                   #         username: "{{HOMEPAGE_VAR_PROXMOX_USER}}"
+                   #         password: "{{HOMEPAGE_VAR_PROXMOX_API_KEY}}"
+                   #         node: pve-2
+- Containers:
+          - Portainer:
+                    icon: portainer.svg
+                    href: "{{HOMEPAGE_VAR_PORTAINER_URL}}"
+                    description: "{{HOMEPAGE_VAR_PORTAINER_URL_des}}"
+
+- DNS:
+          - Pi-Hole1:
+                    icon: pi-hole.svg
+                    href: "{{HOMEPAGE_VAR_PIHOLE_URL_1}}"
+                    description: "{{HOMEPAGE_VAR_PIHOLE_URL_1_des}}"
+          - Pi-Hole2:
+                    icon: pi-hole.svg
+                    href: "{{HOMEPAGE_VAR_PIHOLE_URL_2}}"
+                    description: "{{HOMEPAGE_VAR_PIHOLE_URL_2_des}}"
+
+- Network:
+          - OPNsense:
+                    icon: opnsense.svg
+                    href: "{{HOMEPAGE_VAR_OPNSENSE_NETWORK_URL}}"
+                    description: "{{HOMEPAGE_VAR_OPNSENSE_NETWORK_URL_des}}"
+                    widget:
+                            type: opnsense
+                            url: "{{HOMEPAGE_VAR_OPNSENSE_NETWORK_URL}}"
+                            username: "{{HOMEPAGE_VAR_OPNSENSE_USERNAME}}"
+                            password: "{{HOMEPAGE_VAR_OPNSENSE_PASSWORD}}"
+                            wan: ix2
+          - UptimeKuma:
+                    icon: uptime-kuma.svg
+                    href: "{{HOMEPAGE_VAR_UPTIME_KUMA_URL}}"
+                    description: "{{HOMEPAGE_VAR_UPTIME_KUMA_URL_des}}"
+                   # widget:
+                   #         type: uptimekuma
+                   #         url: "{{HOMEPAGE_VAR_UPTIME_KUMA_URL}}"
+                   #         slug: all
+          - AccessPoint:
+                    icon: /icons/tplink_logo.svg.png
+                    href: "{{HOMEPAGE_VAR_TP-LINK_B95_URL}}"
+                    description: "{{HOMEPAGE_VAR_TP-LINK_B95_URL_des}}"
+          - Switch:
+                    icon: /icons/mokerlinkLogo.jpg
+                    href: "{{HOMEPAGE_VAR_SWITCH0_NETWORK_URL}}"
+                    description: A10-Warthog-SW0 ({{HOMEPAGE_VAR_SWITCH0_NETWORK_URL_des}})
+          - Switch:
+                    icon: /icons/TRENDnet_logo_icon.jpg
+                    href: "{{HOMEPAGE_VAR_SWITCH1_NETWORK_URL}}"
+                    description: A10-Warthog-SW1 ({{HOMEPAGE_VAR_SWITCH1_NETWORK_URL_des}})
+          - Switch:
+                    icon: /icons/mokerlinkLogo.jpg
+                    href: "{{HOMEPAGE_VAR_SWITCH2_NETWORK_URL}}"
+                    description: A10-Warthog-SW2 ({{HOMEPAGE_VAR_SWITCH2_NETWORK_URL_des}})
+
+- Storage:
+          - TrueNAS:
+                    icon: truenas.svg
+                    href: "{{HOMEPAGE_VAR_TRUENAS_URL}}"
+                    description: "{{HOMEPAGE_VAR_TRUENAS_URL_des}}"
+                   # widget:
+                   #         type: truenas
+                   #         url: "{{HOMEPAGE_VAR_TRUENAS_URL}}"
+                   #         key: "{{HOMEPAGE_VAR_TRUENAS_API_KEY}}"
+
+- Media:
+          - Plex:
+                    icon: plex.svg
+                    href: "{{HOMEPAGE_VAR_PLEX_URL}}"
+                    description: "{{HOMEPAGE_VAR_PLEX_URL_des}}"
+                   # widget:
+                   #         type: plex
+                   #         url: "{{HOMEPAGE_VAR_PLEX_URL}}"
+                   #         key: "{{HOMEPAGE_VAR_PLEX_API_TOKEN}}"
+          - Jellyfin:
+                    icon: jellyfin.svg
+                    href: "{{HOMEPAGE_VAR_JELLYFIN_URL}}"
+                    description: "{{HOMEPAGE_VAR_JELLYFIN_URL_des}}"
+                   # widget:
+                   #         type: jellyfin
+                   #         url: "{{HOMEPAGE_VAR_JELLYFIN_URL}}"
+                   #         key: "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}"
+          - HDHomerun:
+                    icon: hdhomerun.png
+                    href: "{{HOMEPAGE_VAR_HDHOMERUN_URL}}"
+                    description: "{{HOMEPAGE_VAR_HDHOMERUN_URL_des}}"
+                    widget:
+                            type: hdhomerun
+                            url: "{{HOMEPAGE_VAR_HDHOMERUN_URL}}"
+          - qBittorrent:
+                    icon: qbittorrent.svg
+                    href: "{{HOMEPAGE_VAR_QBITTORRENT_URL}}"
+                    description: "{{HOMEPAGE_VAR_QBITTORRENT_URL_des}}"
+                    widget:
+                            type: qbittorrent
+                            url: "{{HOMEPAGE_VAR_QBITTORRENT_URL}}"
+                            username: "{{HOMEPAGE_VAR_QBITTORRENT_USER}}"
+                            password: "{{HOMEPAGE_VAR_QBITTORRENT_PASS}}"
+          - Storyteller:
+                    icon: /icons/storyteller_logo.png
+                    href: "{{HOMEPAGE_VAR_STORYTELLER_URL}}"
+                    description: "{{HOMEPAGE_VAR_STORYTELLER_URL_des}}"
+          - Paperless:
+                    icon: paperless.svg
+                    href: "{{HOMEPAGE_VAR_PAPERLESS_URL}}"
+                    description: "{{HOMEPAGE_VAR_PAPERLESS_URL_des}}"
+
+- Home Automation:
+          - Home Assistant:
+                    icon: home-assistant.svg
+                    href: "{{HOMEPAGE_VAR_HOME_ASSISTANT_URL}}"
+                    description: "{{HOMEPAGE_VAR_HOME_ASSISTANT_URL_des}}"
