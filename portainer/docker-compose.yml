@@ -1,0 +1,47 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest  # Use the latest Community Edition of Portainer
+    container_name: portainer             # Name the container 'portainer' for easy reference
+    restart: unless-stopped               # Restart automatically unless manually stopped
+    security_opt:
+      - no-new-privileges:true            # Improve security by preventing privilege escalation
+    ports:
+      - "9000:9000"  # Expose HTTP (insecure) port for direct access, e.g., http://host:9000
+      - "9443:9443"  # Expose HTTPS (secure) port for direct access, e.g., https://host:9443
+    environment:
+      - "TZ=America/Denver"               # Set timezone for container logs and UI
+    volumes:
+      - /etc/localtime:/etc/localtime:ro                     # Sync time with host
+      - /var/run/docker.sock:/var/run/docker.sock:ro         # Allow Portainer to manage Docker on the host
+      - /home/serveradmin/portainer/data:/data               # Persist Portainer's data/config
+    labels:
+      - "traefik.enable=true"  # Enable this container for Traefik reverse proxy
+
+      # Define router for accessing Portainer via domain name (Traefik matches based on this)
+      - "traefik.http.routers.portainer.rule=Host(`portainer.local.turtletough.net`)"
+
+      # Specify Traefik entrypoint to use (defined in Traefik config as port 443 for HTTPS)
+      - "traefik.http.routers.portainer.entrypoints=https"
+      - "traefik.http.routers.portainer.tls=true"
+
+      # Enable automatic Let's Encrypt certificate issuance via Cloudflare
+      - "traefik.http.routers.portainer.tls.certresolver=cloudflare"
+
+      # Tell Traefik which internal container port Portainer is listening on
+      - "traefik.http.services.portainer.loadbalancer.server.port=9443"
+
+      # Tell Traefik to connect to that internal port using HTTPS (since 9443 is HTTPS)
+      - "traefik.http.services.portainer.loadbalancer.server.scheme=https"
+
+      # Auto-update via watchtower
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - proxy  # Connect to the shared network that Traefik is also on
+
+volumes:
+  portainer_data:
+    external: true  # Reuse an external Docker volume for Portainer data
+
+networks:
+  proxy:
+    external: true  # Use external 'proxy' network (must match the network Traefik is using)
