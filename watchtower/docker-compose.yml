@@ -1,0 +1,22 @@
+services:
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    environment:
+      - TZ=America/Denver
+      # Run once per day at 04:00
+      - WATCHTOWER_SCHEDULE=0 0 4 * * *
+      # Only update containers that are labeled (see step 3)
+      - WATCHTOWER_LABEL_ENABLE=true
+      # Remove old images after successful update
+      - WATCHTOWER_CLEANUP=true
+      # Shorten downtime by restarting containers one at a time
+      - WATCHTOWER_ROLLING_RESTART=true
+      # Optional: quietly skip stopped containers
+      - WATCHTOWER_INCLUDE_STOPPED=false
+      # Optional: only check for new images, don't update (good for first run)
+      # - WATCHTOWER_NO_START=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    # No ports needed; Watchtower talks to the Docker socket.
