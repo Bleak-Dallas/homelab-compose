@@ -1,0 +1,31 @@
+http:
+  routers:
+    example:
+      entryPoints: ["https"]
+      rule: "Host(pp.example.com)"
+      middlewares: ["default-headers", "https-redirectscheme"]
+      tls: {}
+      service: example
+  services:
+    example:
+      loadBalancer:
+        servers:
+          - url: "http://10.0.0.10:8080"
+        passHostHeader: true
+  middlewares:
+    https-redirectscheme:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    default-headers:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 15552000
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: https
