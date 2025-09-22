@@ -27,3 +27,6 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# Storyteller secret key
+storyteller/STORYTELLER_SECRET_KEY.txt
