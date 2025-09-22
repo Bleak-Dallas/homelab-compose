@@ -1,0 +1,117 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: infisical-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ${POSTGRES_DATA}:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - internal
+
+  redis:
+    image: redis:7-alpine
+    container_name: infisical-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - internal
+
+  infisical:
+    image: infisical/infisical:latest
+    container_name: infisical
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # Required
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      AUTH_SECRET: ${AUTH_SECRET}
+      DB_CONNECTION_URI: ${DB_CONNECTION_URI}   # e.g. postgresql://user:PASS%40WORD@postgres:5432/db
+      REDIS_URL: ${REDIS_URL}                   # e.g. redis://redis:6379
+
+      # URLs
+      SITE_URL: ${SITE_URL}                     # https://infisical.local.turtletough.net
+      NEXTAUTH_URL: ${NEXTAUTH_URL}             # same as SITE_URL
+
+      # Gmail SMTP
+      SMTP_HOST: ${SMTP_HOST}                   # smtp.gmail.com
+      SMTP_PORT: ${SMTP_PORT}                   # 587
+      SMTP_USERNAME: ${SMTP_USERNAME}           # your.name@gmail.com
+      SMTP_PASSWORD: ${SMTP_PASSWORD}           # 16-char App Password
+      SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      SMTP_SECURE: ${SMTP_SECURE}               # "false" for port 587 (STARTTLS)
+
+      # Quiet a noisy warning in logs (optional)
+      AWS_SDK_JS_SUPPRESS_MAINTENANCE_MODE_MESSAGE: "1"
+
+      # Optional tuning
+      # PORT: "8080"
+      # NODE_ENV: "production"
+
+    expose:
+      - "8080"
+
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8080', r => process.exit(r.statusCode>=200&&r.statusCode<500?0:1)).on('error', ()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "${PROXY_NETWORK}"
+
+      # HTTP -> HTTPS (middleware defined on Traefik container via labels)
+      traefik.http.routers.infisical.entrypoints: "http"
+      traefik.http.routers.infisical.rule: "Host(`${INFISICAL_HOST}`)"
+      traefik.http.routers.infisical.middlewares: "traefik-https-redirect@docker"
+
+      # HTTPS (file-provider headers + Cloudflare DNS certs)
+      traefik.http.routers.infisical-secure.entrypoints: "https"
+      traefik.http.routers.infisical-secure.rule: "Host(`${INFISICAL_HOST}`)"
+      traefik.http.routers.infisical-secure.tls: "true"
+      traefik.http.routers.infisical-secure.tls.certresolver: "${CERTRESOLVER}"
+      traefik.http.routers.infisical-secure.middlewares: "default-headers@file"
+
+      # Service port
+      traefik.http.services.infisical.loadbalancer.server.port: "8080"
+
+      # Watchtower (optional)
+      com.centurylinklabs.watchtower.enable: "true"
+      watchtower.enable: "true"
+
+    networks:
+      - internal
+      - ${PROXY_NETWORK}
+
+networks:
+  internal:
+    name: infisical-internal
+    driver: bridge
+
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK}
+
+volumes:
+  redis-data:
