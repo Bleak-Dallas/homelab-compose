@@ -1,0 +1,23 @@
+services:
+  iperf3:
+    image: networkstatic/iperf3:latest
+    container_name: iperf3
+    restart: unless-stopped
+    # Choose ONE of the following:
+
+    # 1) Host networking (best raw throughput, no ports needed)
+    network_mode: host
+
+    # 2) Bridge networking (comment the line above and uncomment below)
+    # ports:
+    #   - "5201:5201/tcp"
+    #   - "5201:5201/udp"
+
+    command: ["-s"]
+    logging:
+      driver: "local"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
