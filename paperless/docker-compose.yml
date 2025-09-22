@@ -59,17 +59,24 @@ services:
       - /srv/paperless/consume:/usr/src/paperless/consume
       - /srv/paperless/export:/usr/src/paperless/export
     environment:
+      # Redis / DB
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_DBENGINE: postgresql
       PAPERLESS_DBHOST: db
       PAPERLESS_DBNAME: paperless
       PAPERLESS_DBUSER: paperless
       PAPERLESS_DBPASS: ${POSTGRES_PASSWORD}
+      # App config
       PAPERLESS_ADMIN_USER: admin
       PAPERLESS_ADMIN_PASSWORD: ${PAPERLESS_ADMIN_PASSWORD}
       PAPERLESS_OCR_LANGUAGE: eng
       PAPERLESS_TIME_ZONE: America/Denver
       PAPERLESS_URL: ${PAPERLESS_URL}
+      # MUST be passed through to avoid session corruption
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
+      # UID/GID mapping (optional but recommended)
+      USERMAP_UID: ${USERMAP_UID}
+      USERMAP_GID: ${USERMAP_GID}
     networks:
       - paperless-net
     healthcheck:
