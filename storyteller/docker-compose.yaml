@@ -1,0 +1,19 @@
+services:
+  web:
+    image: registry.gitlab.com/storyteller-platform/storyteller:latest
+    runtime: nvidia
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - STORYTELLER_SECRET_KEY_FILE=/run/secrets/secret_key
+    volumes:
+      - ./data:/data:rw
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
+    secrets:
+      - secret_key
+
+secrets:
+  secret_key:
+    file: ./STORYTELLER_SECRET_KEY.txt
