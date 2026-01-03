@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pg-hedgedoc
+    restart: unless-stopped
+    env_file:
+      - /DATA/AppData/hedgedoc/.env
+    environment:
+      POSTGRES_DB: ${HD_PG_DB}
+      POSTGRES_USER: ${HD_PG_USER}
+      POSTGRES_PASSWORD: ${HD_PG_PASSWORD}
+    volumes:
+      - /DATA/AppData/postgres/hedgedoc:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${HD_PG_USER} -d ${HD_PG_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  hedgedoc:
+    image: quay.io/hedgedoc/hedgedoc:1.10.3
+    container_name: hedgedoc
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    env_file:
+      - /DATA/AppData/hedgedoc/.env
+    environment:
+      CMD_DB_URL: postgres://${HD_PG_USER}:${HD_PG_PASSWORD}@postgres:5432/${HD_PG_DB}
+      CMD_DOMAIN: ${HD_DOMAIN}
+      CMD_URL_ADDPORT: ${HD_URL_ADDPORT}
+      CMD_PROTOCOL_USESSL: ${HD_USE_SSL}
+      CMD_SESSION_SECRET: ${HD_SESSION_SECRET}
+      CMD_ALLOW_ANONYMOUS: ${HD_ALLOW_ANON}
+      CMD_ALLOW_ANONYMOUS_EDITS: ${HD_ALLOW_ANON_EDITS}
+      CMD_IMAGE_UPLOAD_TYPE: filesystem
+      UPLOADS_MODE: ${HD_UPLOADS_MODE}
+    volumes:
+      - /DATA/AppData/hedgedoc/uploads:/hedgedoc/public/uploads
+      - /DATA/AppData/hedgedoc/config:/config
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:3000/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
