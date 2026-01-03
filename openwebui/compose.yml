@@ -1,0 +1,37 @@
+# Summary:
+# - Open WebUI stays CPU-only
+# - docker-model-runner gets the NVIDIA GPU
+# - Uses simple 'gpus: all' (works with your Compose v2.40)
+# - Includes a basic healthcheck
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "3000:8080"
+    environment:
+      - OPENAI_API_BASE_URL=http://model-runner.docker.internal/engines/v1
+      - OPENAI_API_KEY=''
+      - WEBUI_NAME=Open-WebUI with Docker Model Runner
+    volumes:
+      - open-webui:/app/backend/data
+    depends_on:
+      - docker-model-runner
+
+  docker-model-runner:
+    image: ghcr.io/open-webui/model-runner:latest
+    environment:
+      - MODEL=ai/qwen3:14B-Q6_K
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    gpus: all
+    healthcheck:
+      test:
+        ["CMD", "sh", "-c", "wget -qO- http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  open-webui:
