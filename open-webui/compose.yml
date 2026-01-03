@@ -1,0 +1,24 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:cuda
+    container_name: open-webui
+    restart: always
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui-data:/app/backend/data
+    environment:
+      # Use the specific IP address shown in your LM Studio screenshot
+      - OPENAI_API_BASE_URL=http://169.254.83.107:1234/v1
+      - OPENAI_API_KEY=lm-studio
+      - ENABLE_OLLAMA_API=False
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+volumes:
+  open-webui-data:
