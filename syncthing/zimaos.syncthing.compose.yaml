@@ -1,0 +1,116 @@
+name: syncthing
+services:
+  syncthing:
+    container_name: syncthing
+    deploy:
+      resources:
+        reservations:
+          memory: "268435456"
+          devices: []
+        limits:
+          memory: "33629556736"
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=America/Denver
+    image: linuxserver/syncthing:1.29.7
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Syncthing/icon.png
+    ports:
+      - target: 8384
+        published: "8384"
+        protocol: tcp
+      - target: 22000
+        published: "22000"
+        protocol: tcp
+      - target: 22000
+        published: "22000"
+        protocol: udp
+      - target: 21027
+        published: "21027"
+        protocol: udp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/syncthing/config
+        target: /config
+      - type: bind
+        source: /DATA
+        target: /DATA
+    x-casaos:
+      envs:
+        - container: TZ
+          description:
+            en_us: TimeZone
+        - container: PUID
+          description:
+            en_us: Run Syncthing as specified uid.
+        - container: PGID
+          description:
+            en_us: Run Syncthing as specified gid.
+      ports:
+        - container: "8384"
+          description:
+            en_us: WebUI HTTP Port
+        - container: "22000"
+          description:
+            en_us: Syncthing listening Port (TCP)
+        - container: "22000"
+          description:
+            en_us: Syncthing listening Port (UDP)
+          protocol: udp
+        - container: "21027"
+          description:
+            en_us: Syncthing protocol discovery Port (TCP)
+          protocol: udp
+      volumes:
+        - container: /config
+          description:
+            en_us: Syncthing config directory.
+        - container: /DATA
+          description:
+            en_us: Syncthing Accessible Directory.
+    devices: []
+    cap_add: []
+    command: []
+    network_mode: bridge
+    privileged: false
+    cpu_shares: 90
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: CasaOS Team
+  category: Backup
+  description:
+    en_US: >
+      # Unlocking the True Potential of Data Backup
+
+      Say goodbye to traditional cloud backup limitations and embrace the future with Syncthing. Unlike conventional cloud services that often come with privacy concerns and storage restrictions, Syncthing provides a secure, real-time file synchronization solution that keeps your data exclusively in your hands. Whether you're syncing work documents or personal photos, you have complete control over where and how your files are stored and shared.
+
+      # Features That Make a Difference
+
+      Syncthing offers a seamless, user-friendly experience with powerful features designed for everyday users. Enjoy continuous file synchronization between multiple devices without any subscription fees. Experience peace of mind knowing that your data is encrypted and protected from unauthorized access. Syncthing’s open-source nature means no hidden costs, providing a truly transparent and cost-effective solution for your file management needs.
+
+      # The Power of Syncthing on Zima
+
+      Deploying Syncthing on Zima private cloud devices unlocks unparalleled convenience: enjoy unlimited storage capacity, ensure the privacy of your data, and benefit from blazing local network speeds. Transform your data management and synchronization with the perfect combination of Syncthing’s capabilities and Zima’s powerful infrastructure.
+  developer: Syncthing
+  icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Syncthing/icon.png
+  index: /
+  is_uncontrolled: false
+  main: syncthing
+  port_map: "8384"
+  screenshot_link:
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Syncthing/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Syncthing/screenshot-2.png
+  store_app_id: syncthing
+  tagline:
+    en_US: Open decentralized file synchronization
+  thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Syncthing/thumbnail.png
+  tips: {}
+  title:
+    en_us: Syncthing
+    custom: ""
+  hostname: ""
+  scheme: http
