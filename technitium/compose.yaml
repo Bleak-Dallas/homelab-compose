@@ -1,0 +1,34 @@
+services:
+  dns-server:
+    container_name: dns-server
+    hostname: dns-server
+    image: technitium/dns-server:latest
+
+    ports:
+      - "5380:5380/tcp" # Web console (HTTP)
+      - "53:53/udp" # DNS service
+      - "53:53/tcp" # DNS service
+      # Optional ports - uncomment as needed:
+      - "53443:53443/tcp" # Web console (HTTPS)
+      # - "853:853/udp"      # DNS-over-QUIC
+      # - "853:853/tcp"      # DNS-over-TLS
+      # - "443:443/udp"      # DNS-over-HTTPS (HTTP/3)
+      # - "443:443/tcp"      # DNS-over-HTTPS (HTTP/1.1, HTTP/2)
+      # - "67:67/udp"        # DHCP service
+
+    environment:
+      - DNS_SERVER_DOMAIN=turtletough.net
+      # Uncomment and set for production:
+      - DNS_SERVER_ADMIN_PASSWORD=${DNS_PASSWORD}
+      # - DNS_SERVER_PREFER_IPV6=false
+      # - DNS_SERVER_RECURSION=AllowOnlyForPrivateNetworks
+      - DNS_SERVER_FORWARDERS=1.1.1.1,1.0.0.1
+      # - DNS_SERVER_FORWARDERS=1.1.1.1:853,1.0.0.1:853
+
+    volumes:
+      - /home/serveradmin/technitium/config:/etc/dns
+
+    restart: unless-stopped
+
+    sysctls:
+      - net.ipv4.ip_local_port_range=1024 65000
