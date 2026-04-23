@@ -1,0 +1,10 @@
+services:
+  app:
+    container_name: tugtainer
+    image: quenary/tugtainer:latest
+    restart: unless-stopped
+    ports:
+      - "9412:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/serveradmin/tugtainer/data:/tugtainer
