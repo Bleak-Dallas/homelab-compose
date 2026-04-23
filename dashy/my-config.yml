@@ -1,0 +1,154 @@
+pageInfo:
+  title: Dallas' Dashboard
+  description: There is no place like home
+  navLinks:
+    - title: GitHub
+      path: https://github.com/Lissy93/dashy
+appConfig:
+  theme: glass
+  layout: auto
+  iconSize: medium
+  webSearch:
+    searchEngine: google
+    openingMethod: newtab
+sections:
+  - name: Entertainment
+    icon: fas fa-film
+    items:
+      - title: YouTube
+        description: Video Platform
+        icon: hl-youtube
+        url: https://www.youtube.com/
+        id: 0_1374_youtube
+      - title: Netflix
+        description: Streaming Service
+        icon: hl-netflix
+        url: https://www.netflix.com/
+        id: 1_1374_netflix
+      - title: Prime Video
+        description: Streaming Service
+        icon: hl-amazon-prime
+        url: https://www.amazon.com/gp/video/storefront
+        id: 2_1374_primevideo
+      - title: Apple TV+
+        description: Streaming Service
+        icon: hl-apple-light
+        url: https://tv.apple.com/
+        id: 3_1374_appletv
+      - title: Plex
+        description: Media Server
+        icon: hl-plex
+        url: http://10.42.42.14:32400/web
+        id: 4_1374_plex
+      - title: Jellyfin
+        description: Media Server
+        icon: hl-jellyfin
+        url: http://10.42.42.8:8096/web/
+        id: 5_1374_jellyfin
+      - title: Fandango
+        description: Movies
+        icon: fandango.png
+        url: https://athome.fandango.com/content/browse/home
+        id: 6_1374_fandango
+      - title: Hulu
+        description: Streaming Service
+        icon: hl-hulu
+        url: https://www.hulu.com/
+        id: 7_1374_hulu
+      - title: Disney+
+        description: Streaming Service
+        icon: hl-disney-plus
+        url: https://www.disneyplus.com/
+        id: 8_1374_disney
+  - name: Photos / Documents
+    icon: fas fa-camera
+    items:
+      - title: Immich
+        description: Photo Management
+        icon: hl-immich
+        url: https://immich.local.turtletough.net/
+        id: 0_1694_immich
+      - title: Paperless
+        description: Document Management
+        icon: hl-paperless
+        url: http://10.42.42.14:8010/
+        id: 1_1694_paperless
+  - name: Torrenting
+    icon: fas fa-download
+    items:
+      - title: qBittorrent
+        description: Torrent Client
+        icon: hl-qbittorrent
+        url: http://10.42.42.10:8090/
+        id: 0_1068_qbittorrent
+      - title: qBittorrent (WhatBox)
+        description: Torrent Client
+        icon: hl-qbittorrent
+        url: https://qbittorrent.upbeatturkey.box.ca/
+        id: 1_1068_qbittorrentwhatbox
+      - title: Radarr
+        description: Movie Management
+        icon: hl-radarr
+        url: http://10.42.42.10:7878/
+        id: 2_1068_radarr
+      - title: Sonarr
+        description: TV Show Management
+        icon: hl-sonarr
+        url: http://10.42.42.10:8989/
+        id: 3_1068_sonarr
+      - title: Prowlarr
+        description: Indexer Management
+        icon: hl-prowlarr
+        url: http://10.42.42.10:9696/
+        id: 4_1068_prowlarr
+  - name: Home Lab
+    icon: fas fa-server
+    items:
+      - title: Proxmox-2
+        description: Virtualization Platform
+        icon: hl-proxmox
+        url: https://10.42.42.1:8006/
+        id: 0_696_proxmox
+      - title: Proxmox-3
+        description: Virtualization Platform
+        icon: hl-proxmox
+        url: https://10.42.42.4:8006/
+        id: 1_696_proxmox
+      - title: Home Assistant
+        description: Home Automation
+        icon: home-assistant.png
+        url: http://10.42.42.12:8123/
+      - title: Tugtainer
+        description: Container Management
+        icon: tugtainer.png
+        url: http://10.42.42.10:9412/
+        id: 2_696_tugtainer
+  - name: Network
+    icon: far fa-network-wired
+    items:
+      - title: Opensense
+        description: Network Gateway
+        icon: hl-opnsense
+        url: https://opnsense.local.turtletough.net/
+        id: 0_746_opensense
+      - title: Technitium-1
+        description: Network DNS / Ad Blocker
+        icon: hl-technitium
+        url: http://10.42.42.6:5380/
+        id: 1_746_technitium
+      - title: Technitium-2
+        description: Network DNS / Ad Blocker
+        icon: hl-technitium
+        url: http://10.42.42.9:5380/
+        id: 2_746_technitium
+  - name: Storage
+    icon: fas fa-database
+    items:
+      - title: TrueNAS
+        description: Network Storage
+        icon: hl-truenas
+        url: http://10.42.42.12:8123/
+      - title: ZimaOS
+        description: Network Storage
+        icon: zima-os.png
+        url: http://10.42.42.16/
