@@ -1,0 +1,21 @@
+services:
+  dashy:
+    image: lissy93/dashy:latest
+    container_name: dashy
+    ports:
+      # Maps port 4000 on your host to 8080 in the container. Change 4000 to your preferred port.
+      - "4000:8080"
+    volumes:
+      - ./my-config.yml:/app/user-data/conf.yml
+      - ./item-icons:/app/user-data/item-icons/ # Optional: Uncomment to map local custom icons
+    environment:
+      - NODE_ENV=production
+      - UID=1000
+      - GID=1000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "/app/services/healthcheck"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
